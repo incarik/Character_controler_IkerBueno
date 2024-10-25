@@ -2,11 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NewBehaviourScript : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
     private CharacterController _controller;
 
     [SerializeField] private float _movimentSpeed = 5;
+
+    private  float _turnSmoothVelocity;
+    [SerializeField] private float _turnSmoothTime = 0.5f;
 
     private float _horizontal;
     private float _vertical;
@@ -20,7 +23,7 @@ public class NewBehaviourScript : MonoBehaviour
     [SerializeField] Transform _sensorPosition;
     [SerializeField] float _sensorRadius = 0.5f;
     [SerializeField] LayerMask _groundLayer;
-    [SerializeField] private bool _isGrounded;
+    
     void Awake()
     {
         _controller = GetComponent<CharacterController>();
@@ -38,6 +41,8 @@ public class NewBehaviourScript : MonoBehaviour
         _horizontal = Input.GetAxis("Horizontal");
         _vertical = Input.GetAxis("Vertical");
 
+        IsGrounded();
+
         Movement();
 
         Gravity();
@@ -46,16 +51,25 @@ public class NewBehaviourScript : MonoBehaviour
     {
         Vector3 direction = new Vector3(_horizontal, 0, _vertical);
 
-        _controller.Move(direction * _movimentSpeed * Time.deltaTime);
+        if(direction != Vector3.zero)
+        {
+             float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
+
+             float smoothAngle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref _turnSmoothVelocity, _turnSmoothTime);
+
+             transform.rotation = Quaternion.Euler(0, smoothAngle, 0); 
+
+             _controller.Move(direction * _movimentSpeed * Time.deltaTime);
+        }
     }
 
     void Gravity()
     {
-        if(!_isGrounded)
+        if(!IsGrounded())
         {
             _playerGravity.y += _gravity * Time.deltaTime;
         }
-        else if(_isGrounded && _playerGravity.y < 0)
+        else if(IsGrounded() && _playerGravity.y < 0)
         {
             _playerGravity.y = -1;
         }
@@ -63,15 +77,14 @@ public class NewBehaviourScript : MonoBehaviour
         _controller.Move(_playerGravity * Time.deltaTime);
     }
 
-    void IsGrounded()
+    bool IsGrounded()
     {
-        if(Physics.CheckSphere(_sensorPosition.position, _sensorRadius, _groundLayer))
-        {
-            _isGrounded = true;
-        }
-        else
-        {
-            _isGrounded = false;
-        }
+        return Physics.CheckSphere(_sensorPosition.position, _sensorRadius, _groundLayer);
+    }
+
+    void OnDrawGizmos()
+    {
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(_sensorPosition.position, _sensorRadius);
     }
 }

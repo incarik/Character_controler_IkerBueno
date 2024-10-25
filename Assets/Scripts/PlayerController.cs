@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     private CharacterController _controller;
+    private Transform _camera;
 
     [SerializeField] private float _movimentSpeed = 5;
 
@@ -27,6 +28,7 @@ public class PlayerController : MonoBehaviour
     void Awake()
     {
         _controller = GetComponent<CharacterController>();
+        _camera = Camera.main.transform;
     }
 
     // Start is called before the first frame update
@@ -53,13 +55,15 @@ public class PlayerController : MonoBehaviour
 
         if(direction != Vector3.zero)
         {
-             float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
+             float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + _camera.eulerAngles.y;
 
              float smoothAngle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref _turnSmoothVelocity, _turnSmoothTime);
 
              transform.rotation = Quaternion.Euler(0, smoothAngle, 0); 
 
-             _controller.Move(direction * _movimentSpeed * Time.deltaTime);
+             Vector3 moveDirection = Quaternion.Euler(0, targetAngle, 0) * Vector3.forward;
+
+             _controller.Move(moveDirection * _movimentSpeed * Time.deltaTime);
         }
     }
 

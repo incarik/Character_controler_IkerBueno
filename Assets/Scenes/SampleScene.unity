@@ -706,7 +706,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _movimentSpeed: 5
-  _turnSmoothTime: 0.5
+  _turnSmoothTime: 0.1
   _jumpHeight: 1
   _gravity: -9.81
   _playerGravity: {x: 0, y: 0, z: 0}

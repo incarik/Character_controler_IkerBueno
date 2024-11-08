@@ -18,7 +18,7 @@ public class PlayerController : MonoBehaviour
     private float _vertical;
 
     [SerializeField] private float _jumpHeight = 1;
-
+    [SerializeField] private float _pushForce = 10;
 
     //--------------Cosas Gravedad--------------------
 
@@ -29,6 +29,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] Transform _sensorPosition;
     [SerializeField] float _sensorRadius = 0.5f;
     [SerializeField] LayerMask _groundLayer;
+
+    private Vector3 moveDirection;
     
     void Awake()
     {
@@ -61,6 +63,11 @@ public class PlayerController : MonoBehaviour
         }
 
         Gravity();
+
+        if(Input.GetKeyDown(KeyCode.F))
+        {
+            RayTest();
+        }
     }
     void Movement()
     {
@@ -74,7 +81,7 @@ public class PlayerController : MonoBehaviour
 
              transform.rotation = Quaternion.Euler(0, smoothAngle, 0); 
 
-             Vector3 moveDirection = Quaternion.Euler(0, targetAngle, 0) * Vector3.forward;
+              moveDirection = Quaternion.Euler(0, targetAngle, 0) * Vector3.forward;
 
              _controller.Move(moveDirection * _movimentSpeed * Time.deltaTime);
         }
@@ -92,7 +99,7 @@ public class PlayerController : MonoBehaviour
 
         if(direction != Vector3.zero)
             {
-             Vector3 moveDirection = Quaternion.Euler(0, targetAngle, 0) * Vector3.forward;
+              moveDirection = Quaternion.Euler(0, targetAngle, 0) * Vector3.forward;
 
             _controller.Move(moveDirection * _movimentSpeed * Time.deltaTime); 
             }        
@@ -120,6 +127,40 @@ public class PlayerController : MonoBehaviour
     bool IsGrounded()
     {
         return Physics.CheckSphere(_sensorPosition.position, _sensorRadius, _groundLayer);
+    }
+
+    void OnControllerCollider(ControllerColliderHit hit)
+    {
+        if(hit.gameObject.layer == 7)
+        {
+            
+        }
+        Rigidbody rBody = hit.collider.attachedRigidbody;
+
+        if(rBody != null)
+        {
+            Vector3 pushDirection = new Vector3(moveDirection.x, 0, moveDirection.z);
+
+            rBody.velocity = pushDirection * _pushForce / rBody.mass;
+        }
+    }
+
+    void RayTest()
+    {
+        RaycastHit hit;
+        if(Physics.Raycast(transform.position, transform.forward, out hit, 10))
+        {
+            Debug.Log(hit.transform.name);
+            Debug.Log(hit.transform.position);
+            Debug.Log(hit.transform.gameObject.layer);
+
+            if(hit.transform.gameObject.tag == "Enemy")
+            {
+                Enemy enemyScript = hit.transform.gameObject.GetComponent<Enemy>();
+
+                enemyScript.TakeDamage();
+            }
+        }
     }
 
     void OnDrawGizmos()

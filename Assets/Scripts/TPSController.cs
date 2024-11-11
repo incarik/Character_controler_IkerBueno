@@ -40,7 +40,7 @@ public class TPSController : MonoBehaviour
     }
     void Start()
     {
-        
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
      void Update()

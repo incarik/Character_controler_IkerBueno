@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
+using System.IO.Compression;
 
 public class TPSController : MonoBehaviour
 {
@@ -10,7 +11,7 @@ public class TPSController : MonoBehaviour
     private Transform _camera;
     private Transform _lookAtPlayer;
     //-----------------Inputs-----------------------------
-    [SerializeField] private float _movimentSpeed = 5;
+    [SerializeField] private float _movementSpeed = 5;
     private float _horizontal;
     private float _vertical;
     [SerializeField] private float _jumpHeight = 1;
@@ -61,6 +62,15 @@ public class TPSController : MonoBehaviour
 
        transform.rotation = Quaternion.Euler(0, xAxis.Value, 0);
        _lookAtPlayer.rotation = Quaternion.Euler(yAxis.Value, xAxis.Value, 0);
+
+    if(move !=Vector3.zero)
+    {
+        float targetAngle = Mathf.Atan2(move.x, move.z) * Mathf.Rad2Deg + _camera.eulerAngles.y;
+        Vector3 moveDirection = Quaternion.Euler(0, targetAngle, 0) * Vector3.forward;
+
+        _controller.Move(moveDirection * _movementSpeed * Time.deltaTime );
+    }
+      
     }
      void Gravity()
     {

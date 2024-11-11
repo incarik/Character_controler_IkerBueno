@@ -10,6 +10,11 @@ public class TPSController : MonoBehaviour
     private CharacterController _controller;
     private Transform _camera;
     private Transform _lookAtPlayer;
+
+    //---------------------Camera-------------------------
+    [SerializeField] private GameObject _normalCamera;
+    [SerializeField] private GameObject _aimCamera;
+
     //-----------------Inputs-----------------------------
     [SerializeField] private float _movementSpeed = 5;
     private float _horizontal;
@@ -42,6 +47,17 @@ public class TPSController : MonoBehaviour
     {
         _horizontal = Input.GetAxis("Horizontal");
         _vertical = Input.GetAxis("Vertical");
+
+        if(Input.GetButtonDown("Fire2"))
+        {
+            _normalCamera.SetActive(false);
+            _aimCamera.SetActive(true);
+        }
+        else if(Input.GetButtonUp("Fire2"))
+        {
+            _normalCamera.SetActive(true);
+            _aimCamera.SetActive(false);
+        }
 
         Movement();
 

@@ -124,12 +124,12 @@ public class PlayerController : MonoBehaviour
         _playerGravity.y = Mathf.Sqrt(_jumpHeight * -2 * _gravity);
     }
 
-   /* bool IsGrounded()
+    bool IsGrounded()
     {
         return Physics.CheckSphere(_sensorPosition.position, _sensorRadius, _groundLayer);
-    }*/
+    }
 
-    bool IsGrounded()
+    /*bool IsGrounded()
     {
         RaycastHit hit;
         if(Physics.Raycast(_sensorPosition.position, -transform.up, out hit, 2))
@@ -149,7 +149,7 @@ public class PlayerController : MonoBehaviour
         {
             return false;
         }
-    }
+    }*/
 
     void OnControllerCollider(ControllerColliderHit hit)
     {

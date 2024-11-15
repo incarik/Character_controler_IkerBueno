@@ -11,6 +11,7 @@ public class FPS : MonoBehaviour
     private float _horizontal;
     private float _vertical;
     private float _xRotation;
+    
     [SerializeField] private float _movimentSpeed = 5;
     [SerializeField] private float _sensitivity = 100;
     [SerializeField] private float _jumpHeight = 1;
@@ -51,6 +52,16 @@ public class FPS : MonoBehaviour
     {
       float mouseX = Input.GetAxis("Mouse X") * _sensitivity *Time.deltaTime;
       float mouseY = Input.GetAxis("Mouse Y") * _sensitivity *Time.deltaTime;
+
+      _xRotation -= mouseY;
+      _xRotation = Mathf.Clamp(_xRotation, -90, 90);
+
+      _camera.localRotation = Quaternion.Euler(_xRotation, 0, 0);
+      transform.Rotate(Vector3.up * mouseX);
+
+      Vector3 move = transform.right * _horizontal + transform.forward * _vertical;
+
+      _controller.Move(move* _movimentSpeed * Time.deltaTime);
     }
         
      void Gravity()

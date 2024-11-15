@@ -33,6 +33,7 @@ public class PlayerController : MonoBehaviour
 
     private Vector3 moveDirection;
     
+    private bool _hasJumped = false;
     void Awake()
     {
         _controller = GetComponent<CharacterController>();
@@ -75,6 +76,9 @@ public class PlayerController : MonoBehaviour
     {
         Vector3 direction = new Vector3(_horizontal, 0, _vertical);
 
+        _animator.SetFloat("VelZ", direction.magnitude);
+        _animator.SetFloat("VelX", 0); 
+
         if(direction != Vector3.zero)
         {
              float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + _camera.eulerAngles.y;
@@ -94,7 +98,7 @@ public class PlayerController : MonoBehaviour
         Vector3 direction = new Vector3(_horizontal, 0, _vertical);
 
         _animator.SetFloat("VelZ", _vertical);
-        _animator.SetFloat("VelX", _horizontal);
+        _animator.SetFloat("VelX", _horizontal);    
 
         float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + _camera.eulerAngles.y;
 
@@ -110,23 +114,32 @@ public class PlayerController : MonoBehaviour
             }        
     }
         
-    void Gravity()
+     void Gravity()
     {
-        if(!IsGrounded())
+        if (!IsGrounded())
         {
             _playerGravity.y += _gravity * Time.deltaTime;
         }
-        else if(IsGrounded() && _playerGravity.y < 0)
+        else if (IsGrounded() && _playerGravity.y < 0)
         {
             _playerGravity.y = -1;
+
+            _animator.SetBool("IsJumping", false);
+            _hasJumped = false; 
         }
-       
+
         _controller.Move(_playerGravity * Time.deltaTime);
     }
 
-     void Jump()
+    void Jump()
     {
         _playerGravity.y = Mathf.Sqrt(_jumpHeight * -2 * _gravity);
+
+            if (!_hasJumped)
+            {
+                _animator.SetBool("IsJumping", true);
+                _hasJumped = true;
+            }
     }
 
     bool IsGrounded()

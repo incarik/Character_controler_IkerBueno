@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour
     //------------Component----------------------------
     private CharacterController _controller;
     private Transform _camera;
+    private Animator _animator;
 
     //-----------------Inputs-----------------------------
     [SerializeField] private float _movimentSpeed = 5;
@@ -36,6 +37,7 @@ public class PlayerController : MonoBehaviour
     {
         _controller = GetComponent<CharacterController>();
         _camera = Camera.main.transform;
+        _animator = GetComponentInChildren<Animator>();
     }
 
     // Start is called before the first frame update
@@ -90,6 +92,9 @@ public class PlayerController : MonoBehaviour
     void AimMovement()
     {
         Vector3 direction = new Vector3(_horizontal, 0, _vertical);
+
+        _animator.SetFloat("VelZ", _vertical);
+        _animator.SetFloat("VelX", _horizontal);
 
         float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + _camera.eulerAngles.y;
 

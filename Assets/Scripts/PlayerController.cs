@@ -203,6 +203,29 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void OnTriggerEnter(Collider other)
+{
+    // Verifica si el personaje ha entrado en la "Zona de Muerte"
+    if (other.CompareTag("DeathZone"))
+    {
+        Die();
+    }
+}
+
+// Método para simular la muerte del personaje
+private void Die()
+{
+    Debug.Log("El personaje ha muerto.");
+    _animator.SetTrigger("IsDeath"); // Asumiendo que tienes una animación de muerte
+
+    // Opcional: Desactivar el control del personaje después de morir
+    enabled = false;
+
+    // Puedes reiniciar la escena si lo deseas
+    // UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
+}
+
+
     void OnDrawGizmos()
     {
         Gizmos.color = Color.green;

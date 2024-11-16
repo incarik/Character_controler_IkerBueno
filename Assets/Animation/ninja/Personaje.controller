@@ -124,7 +124,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 2
-    m_ConditionEvent: Is Death
+    m_ConditionEvent: IsDeath
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 4328418199697153816}
@@ -149,7 +149,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 2
-    m_ConditionEvent: Is Death
+    m_ConditionEvent: IsDeath
     m_EventTreshold: 0
   - m_ConditionMode: 2
     m_ConditionEvent: IsJumping
@@ -192,7 +192,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: Is Death
+    m_ConditionEvent: IsDeath
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 289833419786586979}
@@ -260,7 +260,7 @@ AnimatorController:
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 9100000}
-  - m_Name: Is Death
+  - m_Name: IsDeath
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
@@ -344,7 +344,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: Is Death
+    m_ConditionEvent: IsDeath
     m_EventTreshold: 0
   - m_ConditionMode: 2
     m_ConditionEvent: IsJumping
